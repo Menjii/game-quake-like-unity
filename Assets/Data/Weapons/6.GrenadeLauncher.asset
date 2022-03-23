@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: 6.GrenadeLauncher
   m_EditorClassIdentifier: 
   model: {fileID: 11400000, guid: 63385237db3b2ce47bbbe9168d801cb8, type: 2}
+  shotAnimation: {fileID: 11400000, guid: c3faa196d4eedd446909c0c297729f98, type: 2}
+  shotStartSound: {fileID: 0}
+  shotSound: {fileID: 8300000, guid: 4172097c101db4645be446a5c78c9206, type: 3}
   damage: 120
   shotsPerMinute: 100
   maxAmmo: 100
+  projectile: {fileID: 0}

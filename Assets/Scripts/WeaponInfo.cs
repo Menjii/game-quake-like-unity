@@ -6,6 +6,15 @@ public class WeaponInfo : ScriptableObject
 {
     [SerializeField]
     public MDL model;
+
+    [SerializeField]
+    public MDLAnimation shotAnimation;
+
+    [SerializeField]
+    public AudioClip shotStartSound;
+
+    [SerializeField]
+    public AudioClip shotSound;
     
     [SerializeField]
     public int damage;
@@ -15,4 +24,7 @@ public class WeaponInfo : ScriptableObject
 
     [SerializeField]
     public int maxAmmo;
+
+    [SerializeField]
+    public Projectile projectile;
 }

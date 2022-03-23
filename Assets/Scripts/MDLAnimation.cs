@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-[Serializeable]
+[Serializable]
 public class MDLAnimationFrame
 {
     [SerializeField]
@@ -42,19 +42,25 @@ public enum MDLAnimationType {
     Looped
 }
 
-[Serializeable]
+[Serializable]
 public class MDLAnimation : ScriptableObject {
 
     [SerializeField]
-    [HideInInspector]
+    //[HideInInspector]
     MDLAnimationFrame[] m_frames;
 
     [SerializeField]
     MDLAnimationType m_type;
 
-    public MDLAnimationFrame[] m_frames {
+    public MDLAnimationFrame[] frames {
         get { return m_frames; }
         set { m_frames = value; }
+    }
+
+    public MDLAnimationType type
+    {
+        get { return m_type; }
+        set { m_type = value; }
     }
 
     public int frameCount

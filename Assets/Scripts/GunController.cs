@@ -14,6 +14,7 @@ public enum WeaponType
     Lighting
 }
 
+[RequireComponent(typeof(MDLAnimator))]
 public class GunController : MonoBehaviour
 {
     static readonly KeyCode[] kWeaponKeys = {
@@ -34,20 +35,34 @@ public class GunController : MonoBehaviour
     WeaponType m_weaponType;
 
     WeaponInfo m_weaponInfo;
-    public float damage = 10f;
     public float range = 100f;
 
-    public Camera fpsCam;
+    [SerializeField]
+    Camera fpsCam;
     //public ParticleSystem muzzleflash;
-    Animator m_animator;
+    MDLAnimator m_animator;
+    AudioSource m_audioSource;
 
     float m_shootElapsed;
     float m_shootDelayed;
     bool m_fire;
+
+    [SerializeField]
+    GameObject m_hit;
+
+    [SerializeField]
+    LayerMask m_shootingMask;
+
+    [SerializeField]
+    Transform m_shootingOrigin;
     // Start is called before the first frame update
+    void Awake()
+    {
+        m_animator = GetComponent<MDLAnimator>();
+        m_audioSource = GetComponent<AudioSource>();
+    }
     void Start()
     {
-        m_animator = GetComponent<Animator>();
         ChangeWeapon(m_weaponType);
     }
 
@@ -63,7 +78,7 @@ public class GunController : MonoBehaviour
             }
         }
 
-        m_fire = Input.GetButtonDown("Fire1");
+        m_fire = Input.GetButton("Fire1");
 
         if (m_fire) {
 
@@ -77,17 +92,30 @@ public class GunController : MonoBehaviour
 
     void Shoot(){
         //muzzleflash.Play();
+        if (!m_animator.isAnimationPlaying)
+        {
+            m_animator.PlayAnimation(m_weaponInfo.shotAnimation, ShootAnimationFinished);
+        }
 
+        m_audioSource.Play();
+
+        Ray ray = fpsCam.ViewportPointToRay(new Vector2(0.5f, 0.5f));
+        if (m_weaponInfo.projectile != null) {
+            var rotation = Quaternion.LookRotation(ray.direction);
+            Instantiate(m_weaponInfo.projectile, m_shootingOrigin.transform.position, rotation);
+        } else {
         RaycastHit hit;
         //muzzleFlash.Play();
-        m_animator.SetTrigger("Shoot");
         
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range)) {
-            Debug.Log(hit.transform.name);
+            if (Physics.Raycast(ray, out hit, range, m_shootingMask)) {
+                Debug.Log(hit.transform.name);
 
-            Target target = hit.transform.GetComponent<Target>();
-            if (target != null) {
-                target.TakeDamage(damage);
+                var target = hit.collider.GetComponent<EnemyAiTutorial>();
+                if (target != null) {
+                    target.TakeDamage(m_weaponInfo.damage);
+                }
+
+                Instantiate(m_hit, hit.point, Quaternion.LookRotation(-ray.direction));
             }
         }
     }
@@ -96,9 +124,22 @@ public class GunController : MonoBehaviour
         m_weaponType = weaponType;
         m_weaponInfo = m_weapons[(int) weaponType];
 
-        m_shootDelayed = 60.0f / m_weaponInfo.shotsPerMinute;
-
+        #if UNITY_EDITOR
+        m_animator = GetComponent<MDLAnimator>();
+        #endif
         
+        m_animator.model = m_weaponInfo.model; 
+        m_audioSource.clip = m_weaponInfo.shotSound;
+        m_shootDelayed = 60.0f / m_weaponInfo.shotsPerMinute;
+        
+    }
+
+    void ShootAnimationFinished()
+    {
+        if (m_fire)
+        {
+            m_animator.PlayAnimation(m_weaponInfo.shotAnimation, ShootAnimationFinished);
+        }
     }
 
     public WeaponType weaponType
