@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 0}
   ai:
-    sightDistance: 20
+    sightDistance: 40
     fov: 90
-    combatRange: 12
+    combatRange: 20
     visionRate: 2
   animations:
     stand:

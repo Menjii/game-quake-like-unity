@@ -1,32 +1,4 @@
-﻿/*
- * - Edited by PrzemyslawNowaczyk (11.10.17)
- *   -----------------------------
- *   Deleting unused variables
- *   Changing obsolete methods
- *   Changing used input methods for consistency
- *   -----------------------------
- *
- * - Edited by NovaSurfer (31.01.17).
- *   -----------------------------
- *   Rewriting from JS to C#
- *   Deleting "Spawn" and "Explode" methods, deleting unused varibles
- *   -----------------------------
- * Just some side notes here.
- *
- * - Should keep in mind that idTech's cartisian plane is different to Unity's:
- *    Z axis in idTech is "up/down" but in Unity Z is the local equivalent to
- *    "forward/backward" and Y in Unity is considered "up/down".
- *
- * - Code's mostly ported on a 1 to 1 basis, so some naming convensions are a
- *   bit fucked up right now.
- *
- * - UPS is measured in Unity units, the idTech units DO NOT scale right now.
- *
- * - Default values are accurate and emulates Quake 3's feel with CPM(A) physics.
- *
- */
-
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
